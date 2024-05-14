@@ -458,6 +458,10 @@ function init() {
         displayPopularMovies();
         displaySlider();
         console.log('home')
+    } else if (page.includes('')) {
+        displayPopularMovies();
+        displaySlider();
+        console.log('home')
     } else if (page.includes('shows')) {
         displayPopularTVShows();
         console.log('shows')
@@ -475,4 +479,4 @@ function init() {
     highLightActiveLink();
 }
 
-init()
+window.addEventListener('DOMContentLoaded', init);
