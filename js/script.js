@@ -20,85 +20,72 @@ function getLastPart(url) {
     const parts = url.split('/');
     return parts[parts.length - 1];
 }
-
 // Display 20 most popular movies
 async function displayPopularMovies() {
-    try {
-        const { results } = await fetchAPIData('movie/popular');
-
-        const container = document.querySelector('#popular-movies');
-
-        results.forEach(movie => {
-            const div = document.createElement('div');
-            div.classList.add('card');
-            div.innerHTML = `
-                <div class="card">
-                    <a href="movie-details.html?id=${movie.id}">
-                        ${movie.poster_path
-                    ? `<img
-                                src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
-                                class="card-img-top"
-                                alt="Movie Title" />`
-                    : `<img
-                                src="./images/no-image-jpg"
-                                class="card-img-top"
-                                alt="${movie.title}"
-                            />`}
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">${movie.title}</h5>
-                        <p class="card-text">
-                            <small class="text-muted">Release: ${movie.release_date}</small>
-                        </p>
-                    </div>
-                </div>`;
-
-            container.appendChild(div);
-        });
-    } catch (error) {
-        console.error(error);
-    }
+    const popularMovies = document.querySelector('#popular-movies');
+    const { results } = await fetchAPIData('movie/popular');
+    results.forEach((movie) => {
+        const div = document.createElement('div');
+        div.classList.add('card');
+        div.innerHTML = `
+          <a href="movie-details.html?id=${movie.id}">
+            ${movie.poster_path
+                ? `<img
+              src="https://image.tmdb.org/t/p/w500${movie.poster_path}"
+              class="card-img-top"
+              alt="${movie.title}"
+            />`
+                : `<img
+            src="./images/no-image.jpg"
+            class="card-img-top"
+            alt="${movie.title}"
+          />`
+            }
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${movie.title}</h5>
+            <p class="card-text">
+              <small class="text-muted">Release: ${movie.release_date}</small>
+            </p>
+          </div>
+        `;
+        popularMovies.appendChild(div);
+    });
 }
 
-// Display 20 most popular shows
+// Display 20 most popular tv shows
 async function displayPopularTVShows() {
-    try {
-        const { results } = await fetchAPIData('tv/popular');
+    const { results } = await fetchAPIData('tv/popular');
 
-        const container = document.querySelector('#popular-shows');
+    results.forEach((show) => {
+        const div = document.createElement('div');
+        div.classList.add('card');
+        div.innerHTML = `
+          <a href="tv-details.html?id=${show.id}">
+            ${show.poster_path
+                ? `<img
+              src="https://image.tmdb.org/t/p/w500${show.poster_path}"
+              class="card-img-top"
+              alt="${show.name}"
+            />`
+                : `<img
+            src="./images/no-image.jpg"
+            class="card-img-top"
+            alt="${show.name}"
+          />`
+            }
+          </a>
+          <div class="card-body">
+            <h5 class="card-title">${show.name}</h5>
+            <p class="card-text">
+              <small class="text-muted">Air Date: ${show.first_air_date}</small>
+            </p>
+          </div>
+        `;
 
-        results.forEach(show => {
-            const div = document.createElement('div');
-            div.classList.add('card');
-            div.innerHTML = `
-                <div class="card">
-                    <a href="tv-details.html?id=${show.id}">
-                        ${show.poster_path
-                    ? `<img
-                                src="https://image.tmdb.org/t/p/w500${show.poster_path}"
-                                class="card-img-top"
-                                alt="Movie Title" />`
-                    : `<img
-                                src="./images/no-image-jpg"
-                                class="card-img-top"
-                                alt="${show.name}"
-                            />`}
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">${show.name}</h5>
-                        <p class="card-text">
-                            <small class="text-muted">Release: ${show.first_air_date}</small>
-                        </p>
-                    </div>
-                </div>`;
-
-            container.appendChild(div);
-        });
-    } catch (error) {
-        console.error(error);
-    }
+        document.getElementById('popular-shows').appendChild(div);
+    });
 }
-
 // Display Movie Details
 
 async function displayMovieDetails() {
@@ -454,26 +441,30 @@ function addCommasToNumber(number) {
 
 // Init App
 function init() {
+    const page = window.location.pathname;
+
+    // Redirect to index.html if on root path
+    if (page === '/') {
+        window.location.href = 'index.html';
+        return;
+    }
+
     if (page.includes('index.html')) {
         displayPopularMovies();
         displaySlider();
-        console.log('home')
-    } else if (page.includes('')) {
-        displayPopularMovies();
-        displaySlider();
-        console.log('home')
+        console.log('home');
     } else if (page.includes('shows')) {
         displayPopularTVShows();
-        console.log('shows')
+        console.log('shows');
     } else if (page.includes('movie-details')) {
-        displayMovieDetails()
-        console.log('movie details')
+        displayMovieDetails();
+        console.log('movie details');
     } else if (page.includes('tv-details')) {
         displayShowDetails();
-        console.log('tv details')
+        console.log('tv details');
     } else if (page.includes('search')) {
         search();
-        console.log('search')
+        console.log('search');
     }
 
     highLightActiveLink();
