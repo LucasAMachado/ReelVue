@@ -475,4 +475,4 @@ function init() {
     highLightActiveLink();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+init()
